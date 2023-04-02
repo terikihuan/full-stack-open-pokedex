@@ -8,7 +8,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  simple_deployment_pipeline:
+  linting:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check style
+        run: npm run eslint
+  testing:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -17,8 +23,6 @@ jobs:
           node-version: '16'
       - name: Install dependencies
         run: npm install
-      - name: Check style
-        run: npm run eslint
       - name: Build
         run: npm run build
       - name: Test
@@ -30,7 +34,7 @@ jobs:
           start: npm run start-prod
           wait-on: http://localhost:5000
   deploy_render:
-    needs: simple_deployment_pipeline
+    needs: [linting, testing]
     runs-on: ubuntu-20.04
     steps:
       - name: Deploy to Render
