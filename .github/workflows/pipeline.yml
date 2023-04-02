@@ -28,3 +28,15 @@ jobs:
           command: npm run test:e2e
           start: npm run start-prod
           wait-on: http://localhost:5000
+  deploy_render:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Wait for Render Deployment
+        uses: bounceapp/render-action@0.6.0
+        with:
+          render-token: ${{ secrets.RENDER_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          service-id: srv-cgilgc7dvk4vd54atsfg
+          retries: 20
+          wait: 16000
+          sleep: 30000
