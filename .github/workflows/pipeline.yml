@@ -45,7 +45,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          DRY_RUN: true
   deploy_render:
     if: ${{ github.event_name == 'push' }}
     needs: [simple_deployment_pipeline]
