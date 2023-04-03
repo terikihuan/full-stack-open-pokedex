@@ -32,6 +32,27 @@ jobs:
           command: npm run test:e2e
           start: npm run start-prod
           wait-on: http://localhost:5000
+      - name: Test Success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ success() }}
+        with:
+          severity: info
+          details: Test Succeeded!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Test Failure
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ failure() }}
+        with:
+          severity: error
+          details: Test Failed!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Test Cancelled
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ cancelled() }}
+        with:
+          severity: warn
+          details: Test Cancelled!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }
   tag_release:
     if: ${{ github.event_name == 'push' && !contains(join(toJSon(github.event.commits.*.message)), '#skip') }}
     needs: [simple_deployment_pipeline]
@@ -41,7 +62,7 @@ jobs:
         with:
           fetch-depth: '0'
       - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.61.0
+        uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
