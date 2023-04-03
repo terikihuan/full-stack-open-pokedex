@@ -33,6 +33,7 @@ jobs:
           start: npm run start-prod
           wait-on: http://localhost:5000
   deploy_render:
+    if: ${{ github.event_name == 'push' }}
     needs: [testing]
     runs-on: ubuntu-20.04
     steps:
